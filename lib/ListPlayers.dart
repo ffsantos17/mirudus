@@ -56,6 +56,29 @@ class _PlayersListViewState extends State<PlayersListView> {
                                 MaterialPageRoute(builder: (context) => Edit(player: players[index])),
                               );
                             },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(5),
+                              minimumSize: Size(0, 0),
+                              elevation: 0,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: ElevatedButton(
+                              child: const Icon(Icons.delete,
+                                color: Colors.white,),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Edit(player: players[index])),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(5),
+                                minimumSize: Size(0, 0),
+                                elevation: 0,
+                              ),
+                            ),
                           ),
                         ],
                       ),

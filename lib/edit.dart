@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'ListPlayers.dart';
 import 'api.dart';
 import 'form.dart';
 
@@ -60,6 +61,10 @@ class _EditState extends State<Edit> {
           textColor: Colors.white,
           onPressed: () {
             _onConfirm(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PlayersListView()),
+            );
           },
         ),
       ),
