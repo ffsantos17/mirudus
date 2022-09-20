@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mirudus/Insert.dart';
 import 'dart:convert';
 import 'api.dart';
 import 'edit.dart';
@@ -22,133 +23,196 @@ class _PlayersListViewState extends State<PlayersListView> {
     });
   }
 
-
   // Método build sobrecarregado que vai construir nossa página
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-
           title: Text("Lista de Players"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.amber,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Insert()),
+                );
+              },
+            )
+          ],
         ),
         // Aqui vem nossa lista
-        body: ListView.builder(
-          itemCount: players.length, // quantidade de elementos
-          // Os elementos da lista
-          itemBuilder: (context, index) {
-            // Vai ser um item de lista tipo ListTile
-            return CheckboxListTile(
-              title: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Text(players[index].name),
+        body: Center(
+          child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          width: 175,
+                          height: 250,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.deepPurple,
                           ),
-                          ElevatedButton(
-                            child: const Icon(Icons.edit,
-                              color: Colors.white,),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Edit(player: players[index])),
+                          child: SelectableText('Teste'),//BoxDecoration
+                        ), //Container
+                        SizedBox(
+                          width: 20,
+                        ), //SizedBox
+                        Container(
+                            width: 175,
+                            height: 250,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.deepPurple,
+                            ) //BoxDecoration
+                        ) //Container
+                      ], //<Widget>[]
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    ), //Row
+                    Container(
+                      child:
+                      Expanded(
+                        child:
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(400, 0,400,0),
+                          child:ListView.builder(
+                            itemCount: players.length, // quantidade de elementos
+                            // Os elementos da lista
+                            itemBuilder: (context, index) {
+                              // Vai ser um item de lista tipo ListTile
+                              return CheckboxListTile(
+                                title: Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child: Text(players[index].name),
+                                          ),
+                                          ElevatedButton(
+                                            child: const Icon(
+                                              Icons.edit,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Edit(player: players[index])),
+                                              );
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              padding: EdgeInsets.all(5),
+                                              minimumSize: Size(0, 0),
+                                              elevation: 0,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: ElevatedButton(
+                                              child: const Icon(
+                                                Icons.delete,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Edit(player: players[index])),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                padding: EdgeInsets.all(5),
+                                                minimumSize: Size(0, 0),
+                                                elevation: 0,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                //Text(players[index].name + " | Level - " +players[index].level),
+                                value: players[index].checked,
+                                secondary: Container(
+                                  height: 35,
+                                  width: 35,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: NetworkImage(
+                                      'https://mirudus.000webhostapp.com/imagens/level_${players[index].level}.PNG',
+                                    ),
+                                  ),
+                                ),
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    players[index].checked = value!;
+                                  });
+                                },
                               );
                             },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(5),
-                              minimumSize: Size(0, 0),
-                              elevation: 0,
-                            ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: ElevatedButton(
-                              child: const Icon(Icons.delete,
-                                color: Colors.white,),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Edit(player: players[index])),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.all(5),
-                                minimumSize: Size(0, 0),
-                                elevation: 0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        )
 
-                  ),
-                ),
-
-
-              //Text(players[index].name + " | Level - " +players[index].level),
-              value: players[index].checked,
-              secondary: Container(
-                height: 35,
-                width: 35,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(
-                    'https://mirudus.000webhostapp.com/imagens/level_${players[index].level}.PNG',
-                  ),
-                ),
-              ),
-              onChanged: (bool? value){
-                setState((){
-                  players[index].checked = value!;
-                });
-              },
-            );
-          },
-        ),
+                      )
+                    ), //Container
+                  ], //<widget>[]
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                ), //Column
+              ) //Padding
+          ), //Container
+        )
+        ,
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.group),
           onPressed: listarApenasMarcados,
-        )
-    );
+        ));
   }
 
-
   /* Aqui é como separamos apenas os registros marcados */
-  void listarApenasMarcados(){
-    List<Player> itensMarcados = List.from(players.where((player) => player.checked));
+  void listarApenasMarcados() {
+    List<Player> itensMarcados =
+        List.from(players.where((player) => player.checked));
     var time1 = [];
     var time2 = [];
     int score1 = 0;
     int score2 = 0;
 
     itensMarcados.shuffle();
-    itensMarcados.sort((a,b) => int.parse(b.level).compareTo(int.parse(a.level)));
-    itensMarcados.forEach((player){
+    itensMarcados
+        .sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
+    itensMarcados.forEach((player) {
       //print(player.name);
-      if(score1 > score2 && time2.length<time1.length){
+      if (score1 > score2 && time2.length < time1.length) {
         int level = int.parse(player.level);
         time2.add(player.name);
-        score2 = level+score2;
+        score2 = level + score2;
         //print('time2 ${time2}-${score2}');
-      }else{
+      } else {
         int level = int.parse(player.level);
         time1.add(player.name);
-        score1 = level+score1;
+        score1 = level + score1;
         //print('time1 ${time1}-${score1}');
       }
-
     });
 
-    print('$time1 - Média time = ${score1/time1.length}');
-    print('$time2 - Média time = ${score2/time2.length}');
+    print('$time1 - Média time = ${score1 / time1.length}');
+    print('$time2 - Média time = ${score2 / time2.length}');
   }
-
 }
-
-
 
 /*
 ListTile(

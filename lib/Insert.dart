@@ -74,12 +74,11 @@ class _InsertState extends State<Insert> {
   }
 
   String dropdownValue = '0';
+  var list = new List<int>.generate(21, (i) => i + 1);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme:  ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
+
       home: Scaffold(
       appBar: AppBar(
         title: Text("MIRUDUS"),
@@ -123,7 +122,7 @@ class _InsertState extends State<Insert> {
             ButtonTheme(
               height: 40.0,
               padding: EdgeInsets.only(left: 20, right: 20),
-              child:RaisedButton(
+              child:ElevatedButton(
                 onPressed:(){ //if button is pressed, setstate sending = true, so that we can show "sending..."
                   setState(() {
                     sending = true;
@@ -134,8 +133,8 @@ class _InsertState extends State<Insert> {
                   sending?"Sending...":"SEND DATA",
                   //if sending == true then show "Sending" else show "SEND DATA";
                 ),
-                color: Colors.redAccent,
-                colorBrightness: Brightness.dark,
+                //color: Colors.redAccent,
+                //colorBrightness: Brightness.dark,
                 //background of button is darker color, so set brightness to dark
               ),//RaisedButton
 

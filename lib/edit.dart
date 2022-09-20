@@ -28,7 +28,7 @@ class _EditState extends State<Edit> {
   Future editStudent() async {
     print(baseUrl);
     return await http.post(Uri.parse(
-      "${baseUrl}/edit.php"),
+      "${baseUrl}edit.php"),
       body: {
         "id": widget.player.id.toString(),
         "player_nome": nameController.text,
@@ -55,10 +55,8 @@ class _EditState extends State<Edit> {
         title: Text("Edit"),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: RaisedButton(
-          child: Text('CONFIRM'),
-          color: Colors.blue,
-          textColor: Colors.white,
+        child: ElevatedButton(
+          child: Text('SALVAR'),
           onPressed: () {
             _onConfirm(context);
             Navigator.push(
