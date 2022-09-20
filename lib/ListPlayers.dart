@@ -11,6 +11,11 @@ class PlayersListView extends StatefulWidget {
 }
 
 class _PlayersListViewState extends State<PlayersListView> {
+
+  var time1 = [];
+  var time2 = [];
+  int score1 = 0;
+  int score2 = 0;
   List<Player> players = List<Player>.empty(); // Lista dos players
 
   // Construtor, atualiza com setState a lista de filmes.
@@ -23,6 +28,49 @@ class _PlayersListViewState extends State<PlayersListView> {
     });
   }
 
+
+  /* Aqui é como separamos apenas os registros marcados */
+  void listarApenasMarcados() {
+    List<Player> itensMarcados =
+    List.from(players.where((player) => player.checked));
+    var time1 = [];
+    var time2 = [];
+    int score1 = 0;
+    int score2 = 0;
+    print(itensMarcados);
+    itensMarcados.shuffle();
+    itensMarcados
+        .sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
+
+    setState(() {
+
+      itensMarcados.forEach((player) {
+        print(player.name);
+        if (score1 > score2 && time2.length < time1.length) {
+          int level = int.parse(player.level);
+          time2.add(player.name);
+          score2 = level + score2;
+          print('time2 ${time2}-${score2}');
+        } else {
+          int level = int.parse(player.level);
+          time1.add(player.name);
+          score1 = level + score1;
+          print('time1 ${time1}-${score1}');
+        }
+      });
+    });
+    print('$time1 - Média time = ${score1 / time1.length}');
+    print('$time2 - Média time = ${score2 / time2.length}');
+  }
+
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
   // Método build sobrecarregado que vai construir nossa página
   @override
   Widget build(BuildContext context) {
@@ -31,7 +79,7 @@ class _PlayersListViewState extends State<PlayersListView> {
           title: Text("Lista de Players"),
           actions: <Widget>[
             IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.add,
                 color: Colors.amber,
               ),
@@ -54,33 +102,37 @@ class _PlayersListViewState extends State<PlayersListView> {
                     Row(
                       children: <Widget>[
                         Container(
-                          width: 175,
-                          height: 250,
+                          width: 375,
+                          height: 150,
                           decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.deepPurple,
+                            color: Colors.black12,
                           ),
-                          child: SelectableText('Teste'),//BoxDecoration
+                          child: Column(
+                            children: <Widget>[
+                              Text('$score1')
+                            ],
+                          ),
                         ), //Container
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ), //SizedBox
-                        Container(
+                       /* Container(
                             width: 175,
                             height: 250,
                             decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.deepPurple,
+                              color: Colors.black12,
                             ) //BoxDecoration
-                        ) //Container
+                        ) */
                       ], //<Widget>[]
                       mainAxisAlignment: MainAxisAlignment.center,
                     ), //Row
                     Container(
-                      child:
-                      Expanded(
-                        child:
-                        Padding(
+                      child: Expanded(
+                        child:Padding(
                           padding: const EdgeInsets.fromLTRB(400, 0,400,0),
                           child:ListView.builder(
                             itemCount: players.length, // quantidade de elementos
@@ -143,7 +195,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                                     ],
                                   ),
                                 ),
-
+                                //subtitle: Text("Level - " +players[index].level),
                                 //Text(players[index].name + " | Level - " +players[index].level),
                                 value: players[index].checked,
                                 secondary: Container(
@@ -182,36 +234,7 @@ class _PlayersListViewState extends State<PlayersListView> {
         ));
   }
 
-  /* Aqui é como separamos apenas os registros marcados */
-  void listarApenasMarcados() {
-    List<Player> itensMarcados =
-        List.from(players.where((player) => player.checked));
-    var time1 = [];
-    var time2 = [];
-    int score1 = 0;
-    int score2 = 0;
 
-    itensMarcados.shuffle();
-    itensMarcados
-        .sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
-    itensMarcados.forEach((player) {
-      //print(player.name);
-      if (score1 > score2 && time2.length < time1.length) {
-        int level = int.parse(player.level);
-        time2.add(player.name);
-        score2 = level + score2;
-        //print('time2 ${time2}-${score2}');
-      } else {
-        int level = int.parse(player.level);
-        time1.add(player.name);
-        score1 = level + score1;
-        //print('time1 ${time1}-${score1}');
-      }
-    });
-
-    print('$time1 - Média time = ${score1 / time1.length}');
-    print('$time2 - Média time = ${score2 / time2.length}');
-  }
 }
 
 /*
