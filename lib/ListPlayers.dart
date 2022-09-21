@@ -205,8 +205,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                                   width: 35,
                                   child: CircleAvatar(
                                     backgroundColor: Colors.white,
-                                    backgroundImage: NetworkImage(
-                                      '/imagens/level_${players[index].level}.PNG',
+                                    child: Image.asset('imagens/level_${players[index].level}.PNG'
                                     ),
                                   ),
                                 ),
