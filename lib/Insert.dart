@@ -1,154 +1,76 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:mirudus/funcional2List.dart';
 import 'package:http/http.dart' as http;
+import 'api.dart';
+import 'form.dart';
+
 
 class Insert extends StatefulWidget {
-  const Insert({Key? key}) : super(key: key);
 
   @override
-  State<Insert> createState() => _InsertState();
+  _InsertState createState() => _InsertState();
 }
 
 class _InsertState extends State<Insert> {
-  TextEditingController namectl = TextEditingController();
-  TextEditingController levelctl = TextEditingController();
-  //text controller for TextField
+  // Required for form validations
+  final formKey = GlobalKey<FormState>();
 
-  late bool error, sending, success;
-  late String msg;
+  // Handles text onchange
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController levelController = new TextEditingController();
 
-  String phpurl = "https://mirudus.000webhostapp.com/insert.php";
-  // do not use http://localhost/ for your local
-  // machine, Android emulation do not recognize localhost
-  // insted use your local ip address or your live URL
-  // hit "ipconfig" on Windows or  "ip a" on Linux to get IP Address
-
-  @override
-  void initState() {
-    error = false;
-    sending = false;
-    success = false;
-    msg = "";
-    super.initState();
+  // Http post request to create new data
+  Future _createStudent() async {
+    return await http.post(Uri.parse(
+      "${baseUrl}create.php"),
+      body: {
+        "player_nome": nameController.text,
+        "player_level": levelController.text
+      },
+    );
   }
 
-  Future<void> sendData() async {
+  void _onConfirm(context) async {
+    await _createStudent();
 
-    var res = await http.post(Uri.parse(phpurl), body: {
-      "name": namectl.text,
-      "level": dropdownValue,
-    }); //sending post request with header data
-
-    if (res.statusCode == 200) {
-      print(res.body); //print raw response on console
-      var data = json.decode(res.body); //decoding json to array
-      if(data["error"]){
-        setState(() { //refresh the UI when error is recieved from server
-          sending = false;
-          error = true;
-          msg = data["message"]; //error message from server
-        });
-      }else{
-
-        namectl.text = "";
-        levelctl.text = "";
-        //after write success, make fields empty
-
-        setState(() {
-          sending = false;
-          success = true; //mark success and refresh UI with setState
-        });
-      }
-
-    }else{
-      //there is error
-      setState(() {
-        error = true;
-        msg = "Error during sendign data.";
-        sending = false;
-        //mark error and refresh UI with setState
-      });
-    }
+    // Remove all existing routes until the Home.dart, then rebuild Home.
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   }
 
-  String dropdownValue = '0';
-  var list = new List<int>.generate(21, (i) => i + 1);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-
-      home: Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text("MIRUDUS"),
+        title: Text("inserir"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Cadastrar Player',
-              style: TextStyle(color: Colors.red, fontSize: 20),
-            ),
-            const SizedBox(height: 30),
-            TextFormField(
-                controller: namectl,
-                decoration: InputDecoration(
-                  labelText:"Nome",
-                  labelStyle: TextStyle(color: Colors.black),
-                )
-            ),
-            const SizedBox(height: 20),
-            const Text("Level GC"),
-            DropdownButton<String>(
-              value: dropdownValue,
-              icon: const Icon(Icons.arrow_drop_down),
-              elevation: 16,
-              style: const TextStyle(color: Colors.black),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownValue = newValue!;
-                });
-              },
-              items: <String>['0','1','2','3','4','5','6','7','8'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            ButtonTheme(
-              height: 40.0,
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child:ElevatedButton(
-                onPressed:(){ //if button is pressed, setstate sending = true, so that we can show "sending..."
-                  setState(() {
-                    sending = true;
-                  });
-                  sendData();
-                },
-                child: Text(
-                  sending?"Sending...":"SEND DATA",
-                  //if sending == true then show "Sending" else show "SEND DATA";
-                ),
-                //color: Colors.redAccent,
-                //colorBrightness: Brightness.dark,
-                //background of button is darker color, so set brightness to dark
-              ),//RaisedButton
+      bottomNavigationBar: SizedBox(height: 58, child: //some widget )
+      BottomAppBar(
+        child: RaisedButton(
+          child: Text("SALVAR"),
+          color: Colors.blue,
+          textColor: Colors.white,
+          onPressed: () {
 
-            ),
+              _onConfirm(context);
 
-          ],
-
-
+          },
         ),
-
-
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
-    ),
+      ),
+      body: Container(
+        height: double.infinity,
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: AppForm(
+              formKey: formKey,
+              nameController: nameController,
+              levelController: levelController,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -16,6 +16,7 @@ class _PlayersListViewState extends State<PlayersListView> {
   var time2 = [];
   int score1 = 0;
   int score2 = 0;
+  int _counter = 0;
   List<Player> players = List<Player>.empty(); // Lista dos players
 
   // Construtor, atualiza com setState a lista de filmes.
@@ -33,10 +34,10 @@ class _PlayersListViewState extends State<PlayersListView> {
   void listarApenasMarcados() {
     List<Player> itensMarcados =
     List.from(players.where((player) => player.checked));
-    var time1 = [];
-    var time2 = [];
-    int score1 = 0;
-    int score2 = 0;
+    time1 = [];
+    time2 = [];
+    score1 = 0;
+    score2 = 0;
     print(itensMarcados);
     itensMarcados.shuffle();
     itensMarcados
@@ -45,31 +46,21 @@ class _PlayersListViewState extends State<PlayersListView> {
     setState(() {
 
       itensMarcados.forEach((player) {
-        print(player.name);
         if (score1 > score2 && time2.length < time1.length) {
           int level = int.parse(player.level);
           time2.add(player.name);
           score2 = level + score2;
-          print('time2 ${time2}-${score2}');
         } else {
           int level = int.parse(player.level);
           time1.add(player.name);
           score1 = level + score1;
-          print('time1 ${time1}-${score1}');
         }
       });
     });
-    print('$time1 - Média time = ${score1 / time1.length}');
-    print('$time2 - Média time = ${score2 / time2.length}');
+
   }
 
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   // Método build sobrecarregado que vai construir nossa página
   @override
@@ -81,7 +72,7 @@ class _PlayersListViewState extends State<PlayersListView> {
             IconButton(
               icon: const Icon(
                 Icons.add,
-                color: Colors.amber,
+                color: Colors.white,
               ),
               onPressed: () {
                 Navigator.push(
@@ -102,7 +93,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                     Row(
                       children: <Widget>[
                         Container(
-                          width: 375,
+                          width: 525,
                           height: 150,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
@@ -111,7 +102,11 @@ class _PlayersListViewState extends State<PlayersListView> {
                           ),
                           child: Column(
                             children: <Widget>[
-                              Text('$score1')
+                              Text('Quantidade Marcados: $_counter',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, height: 2)),
+                              SelectableText('Time 1 $time1 | Média Time: $score1\n'
+                                  'Time 2 $time2 | Média Time: $score2',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, height: 2)),
                             ],
                           ),
                         ), //Container
@@ -168,7 +163,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                                               elevation: 0,
                                             ),
                                           ),
-                                          Padding(
+                                         /*Padding(
                                             padding: const EdgeInsets.all(5),
                                             child: ElevatedButton(
                                               child: const Icon(
@@ -189,7 +184,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                                                 elevation: 0,
                                               ),
                                             ),
-                                          ),
+                                          ),*/
                                         ],
                                       ),
                                     ],
@@ -210,6 +205,11 @@ class _PlayersListViewState extends State<PlayersListView> {
                                 ),
                                 onChanged: (bool? value) {
                                   setState(() {
+                                    if(value == true){
+                                      _counter++;
+                                    }else{
+                                      _counter--;
+                                    }
                                     players[index].checked = value!;
                                   });
                                 },

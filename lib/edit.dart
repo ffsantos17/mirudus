@@ -5,8 +5,6 @@ import 'ListPlayers.dart';
 import 'api.dart';
 import 'form.dart';
 
-
-
 class Edit extends StatefulWidget {
   final Player player;
 
@@ -27,8 +25,8 @@ class _EditState extends State<Edit> {
   // Http post request
   Future editStudent() async {
     print(baseUrl);
-    return await http.post(Uri.parse(
-      "${baseUrl}edit.php"),
+    return await http.post(
+      Uri.parse("${baseUrl}edit.php"),
       body: {
         "id": widget.player.id.toString(),
         "player_nome": nameController.text,
@@ -44,7 +42,8 @@ class _EditState extends State<Edit> {
   @override
   void initState() {
     nameController = TextEditingController(text: widget.player.name);
-    levelController = TextEditingController(text: widget.player.level.toString());
+    levelController =
+        TextEditingController(text: widget.player.level.toString());
     super.initState();
   }
 
@@ -52,18 +51,22 @@ class _EditState extends State<Edit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit"),
+        title: Text("Editar"),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: ElevatedButton(
-          child: Text('SALVAR'),
-          onPressed: () {
-            _onConfirm(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlayersListView()),
-            );
-          },
+      bottomNavigationBar: SizedBox(
+        height: 58,
+        child: //some
+            BottomAppBar(
+          child: ElevatedButton(
+            child: Text('SALVAR'),
+            onPressed: () {
+              _onConfirm(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PlayersListView()),
+              );
+            },
+          ),
         ),
       ),
       body: Container(
