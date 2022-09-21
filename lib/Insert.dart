@@ -45,10 +45,8 @@ class _InsertState extends State<Insert> {
       ),
       bottomNavigationBar: SizedBox(height: 58, child: //some widget )
       BottomAppBar(
-        child: RaisedButton(
+        child: ElevatedButton(
           child: Text("SALVAR"),
-          color: Colors.blue,
-          textColor: Colors.white,
           onPressed: () {
 
               _onConfirm(context);

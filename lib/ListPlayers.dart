@@ -38,23 +38,30 @@ class _PlayersListViewState extends State<PlayersListView> {
     time2 = [];
     score1 = 0;
     score2 = 0;
-    print(itensMarcados);
     itensMarcados.shuffle();
-    itensMarcados
-        .sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
+    itensMarcados.sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
 
     setState(() {
-
+      var pos = 0;
       itensMarcados.forEach((player) {
-        if (score1 > score2 && time2.length < time1.length) {
-          int level = int.parse(player.level);
+        if(pos == 8){
           time2.add(player.name);
-          score2 = level + score2;
-        } else {
-          int level = int.parse(player.level);
+          score2 = int.parse(player.level) + score2;
+        }else if(pos == 9){
           time1.add(player.name);
-          score1 = level + score1;
+          score1 = int.parse(player.level) + score1;
+        }else {
+          if (score1 > score2 && time2.length < time1.length) {
+            int level = int.parse(player.level);
+            time2.add(player.name);
+            score2 = level + score2;
+          } else {
+            int level = int.parse(player.level);
+            time1.add(player.name);
+            score1 = level + score1;
+          }
         }
+        pos++;
       });
     });
 
@@ -67,7 +74,7 @@ class _PlayersListViewState extends State<PlayersListView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Lista de Players"),
+          title: Text("MIRUDUS"),
           actions: <Widget>[
             IconButton(
               icon: const Icon(
@@ -104,8 +111,8 @@ class _PlayersListViewState extends State<PlayersListView> {
                             children: <Widget>[
                               Text('Quantidade Marcados: $_counter',
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, height: 2)),
-                              SelectableText('Time 1 $time1 | Média Time: $score1\n'
-                                  'Time 2 $time2 | Média Time: $score2',
+                              SelectableText('Time 1 $time1 | Média Time: ${score1/time1.length}\n'
+                                  'Time 2 $time2 | Média Time: ${score2/time2.length}',
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, height: 2)),
                             ],
                           ),
@@ -128,7 +135,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                     Container(
                       child: Expanded(
                         child:Padding(
-                          padding: const EdgeInsets.fromLTRB(400, 0,400,0),
+                          padding: const EdgeInsets.fromLTRB(100, 0,100,0),
                           child:ListView.builder(
                             itemCount: players.length, // quantidade de elementos
                             // Os elementos da lista
@@ -199,7 +206,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                                   child: CircleAvatar(
                                     backgroundColor: Colors.white,
                                     backgroundImage: NetworkImage(
-                                      'https://mirudus.000webhostapp.com/imagens/level_${players[index].level}.PNG',
+                                      '/imagens/level_${players[index].level}.PNG',
                                     ),
                                   ),
                                 ),
@@ -229,7 +236,7 @@ class _PlayersListViewState extends State<PlayersListView> {
         )
         ,
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.group),
+          child: Icon(Icons.change_circle_outlined),
           onPressed: listarApenasMarcados,
         ));
   }
