@@ -100,27 +100,32 @@ class _PlayersListViewState extends State<PlayersListView> {
                     Row(
                       children: <Widget>[
                         Container(
-                          width: 525,
-                          height: 150,
+                          width: MediaQuery.of(context).size.width * .85,
+                          height: 170,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.black12,
                           ),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Text('Quantidade Marcados: $_counter',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, height: 2)),
-                              SelectableText('Time 1 $time1 | Média Time: ${score1/time1.length}\n'
-                                  'Time 2 $time2 | Média Time: ${score2/time2.length}',
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, height: 2)),
+                              SelectableText('Time 1 | Média Time: ${score1/time1.length}\n'
+                                  '$time1\n'
+                                  'Time 2 | Média Time: ${score2/time2.length}\n'
+                                  '$time2',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, height: 2)),
                             ],
                           ),
                         ), //Container
-                        const SizedBox(
+                        /*const SizedBox(
                           width: 20,
                         ), //SizedBox
-                       /* Container(
+                        Container(
                             width: 175,
                             height: 250,
                             decoration: BoxDecoration(
@@ -135,7 +140,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                     Container(
                       child: Expanded(
                         child:Padding(
-                          padding: const EdgeInsets.fromLTRB(100, 0,100,0),
+                          padding: const EdgeInsets.fromLTRB(0, 0,0,50),
                           child:ListView.builder(
                             itemCount: players.length, // quantidade de elementos
                             // Os elementos da lista
@@ -205,7 +210,8 @@ class _PlayersListViewState extends State<PlayersListView> {
                                   width: 35,
                                   child: CircleAvatar(
                                     backgroundColor: Colors.white,
-                                    child: Image.asset('imagens/level_${players[index].level}.PNG'
+                                    child: Image.asset(
+                                      'imagens/level_${players[index].level}.PNG',
                                     ),
                                   ),
                                 ),
