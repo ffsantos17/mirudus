@@ -21,18 +21,21 @@ class _EditState extends State<Edit> {
   // This is for text onChange
   late TextEditingController nameController;
   late TextEditingController levelController;
+  late int level;
 
   // Http post request
   Future editStudent() async {
     print(baseUrl);
+    print(level);
     return await http.post(
       Uri.parse("${baseUrl}edit.php"),
       body: {
         "id": widget.player.id.toString(),
         "player_nome": nameController.text,
-        "player_level": levelController.text
+        "player_level": level.toString()
       },
     );
+
   }
 
   void _onConfirm(context) async {
@@ -45,6 +48,7 @@ class _EditState extends State<Edit> {
     levelController =
         TextEditingController(text: widget.player.level.toString());
     super.initState();
+    level = int.parse(widget.player.level);
   }
 
   @override
@@ -77,6 +81,7 @@ class _EditState extends State<Edit> {
               formKey: formKey,
               nameController: nameController,
               levelController: levelController,
+              level: level,
             ),
           ),
         ),

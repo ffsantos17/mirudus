@@ -17,6 +17,7 @@ class _InsertState extends State<Insert> {
   // Handles text onchange
   TextEditingController nameController = new TextEditingController();
   TextEditingController levelController = new TextEditingController();
+  int level = 1;
 
   // Http post request to create new data
   Future _createStudent() async {
@@ -24,7 +25,7 @@ class _InsertState extends State<Insert> {
       "${baseUrl}create.php"),
       body: {
         "player_nome": nameController.text,
-        "player_level": levelController.text
+        "player_level": level.toString()
       },
     );
   }
@@ -65,6 +66,7 @@ class _InsertState extends State<Insert> {
               formKey: formKey,
               nameController: nameController,
               levelController: levelController,
+              level: level,
             ),
           ),
         ),

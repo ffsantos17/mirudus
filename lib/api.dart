@@ -38,7 +38,7 @@ class Player{
 }
 
 class Sorteio{
-  int? id;
+  String id;
   String time1;
   String time2;
   String media1;
@@ -46,7 +46,7 @@ class Sorteio{
   String date;
 
 
-  Sorteio({this.id,
+  Sorteio({required this.id,
     required this.time1,
     required this.time2,
     required this.media1,
@@ -55,12 +55,12 @@ class Sorteio{
   });
 
   Sorteio.fromJson(Map json)
-      : id = json['sorteio_id'],
-        time1 = json['sorteio_time1'],
-        time2 = json['sorteio_time2'],
-        media1 = json['sorteio_media1'],
-        media2 = json['sorteio_media2'],
-        date = json['sorteio_horario'];
+      : id = json['sorteio_id'].toString(),
+        time1 = json['sorteio_time1'].toString(),
+        time2 = json['sorteio_time2'].toString(),
+        media1 = json['sorteio_mediaTime1'].toString(),
+        media2 = json['sorteio_mediaTime2'].toString(),
+        date = json['sorteio_horario'].toString();
 }
 /*
 // A URL da API

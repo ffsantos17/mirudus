@@ -40,6 +40,7 @@ dependencies:
   url_launcher: ^6.1.5
   flutter_linkify: ^5.0.2
   responsive_framework: ^0.2.0
+  syncfusion_flutter_datagrid: ^20.3.47
 
 dev_dependencies:
   flutter_test:
