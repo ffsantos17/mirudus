@@ -61,10 +61,8 @@ class _EditState extends State<Edit> {
             child: Text('SALVAR'),
             onPressed: () {
               _onConfirm(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PlayersListView()),
-              );
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
             },
           ),
         ),

@@ -11,6 +11,11 @@ class API {
     var url = baseUrl + "players.php";
     return await http.get(Uri.parse(url));
   }
+
+  static Future getSorteios() async {
+    var url = baseUrl + "list_sorteios.php";
+    return await http.get(Uri.parse(url));
+  }
 }
 
 class Player{
@@ -32,7 +37,31 @@ class Player{
         checked = false;
 }
 
+class Sorteio{
+  int? id;
+  String time1;
+  String time2;
+  String media1;
+  String media2;
+  String date;
 
+
+  Sorteio({this.id,
+    required this.time1,
+    required this.time2,
+    required this.media1,
+    required this.media2,
+    required this.date
+  });
+
+  Sorteio.fromJson(Map json)
+      : id = json['sorteio_id'],
+        time1 = json['sorteio_time1'],
+        time2 = json['sorteio_time2'],
+        media1 = json['sorteio_media1'],
+        media2 = json['sorteio_media2'],
+        date = json['sorteio_horario'];
+}
 /*
 // A URL da API
 const baseUrl = "https://api.tvmaze.com/search/shows?q=";

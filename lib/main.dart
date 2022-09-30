@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Home.dart';
 import 'listPlayers.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -23,7 +24,10 @@ class App extends StatelessWidget {
           background: Container(color: const Color(0xFFF5F5F5))),
       debugShowCheckedModeBanner: false,
       title: 'Mirudus',
-      home: PlayersListView(),
+      home: HomePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+      ),
     );
   }
 }
