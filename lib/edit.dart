@@ -50,7 +50,7 @@ class _EditState extends State<Edit> {
     super.initState();
     level = int.parse(widget.player.level);
   }
-
+  var sequenceNumbers = new List<int>.generate(21, (k) => k + 1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,11 +77,39 @@ class _EditState extends State<Edit> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(12),
-            child: AppForm(
-              formKey: formKey,
-              nameController: nameController,
-              levelController: levelController,
-              level: level,
+            child: Form(
+              autovalidateMode: AutovalidateMode.always, key: formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: nameController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: 'Player'),
+                  ),
+                  /*TextFormField(
+            controller: widget.levelController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(labelText: 'Level'),
+          ),*/
+                  SizedBox(height: 20),
+                  Text("Level"),
+                  DropdownButton<int>(
+                      hint: Text("Level"),
+                      value: level,
+                      items: sequenceNumbers.map((int value) {
+                        return new DropdownMenuItem<int>(
+                          value: value,
+                          child: new Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          level = newVal!;
+                          print(level);
+                        });
+                      }),
+                ],
+              ),
             ),
           ),
         ),

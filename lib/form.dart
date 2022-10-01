@@ -7,7 +7,7 @@ class AppForm extends StatefulWidget {
   // Handles text onchange
   TextEditingController nameController;
   TextEditingController levelController;
-  int level = 1;
+  int? level;
 
   AppForm({required this.formKey, required this.nameController, required this.levelController, required this.level});
 
