@@ -14,27 +14,8 @@ class SorteiosListView extends StatefulWidget {
 
 class _SorteiosListViewState extends State<SorteiosListView> {
   bool loading = true;
-  List<Sorteio> players = List<Sorteio>.empty(); // Lista dos players
+  List<Sorteio> sorteios = List<Sorteio>.empty(); // Lista dos sorteios
 
-  // Construtor, atualiza com setState a lista de filmes.
-  _SorteiosListViewState() {
-    API.getSorteios().then((response) {
-      setState(() {
-        Iterable lista = json.decode(response.body); // Usamos um iterator
-        players = lista.map((model) => Sorteio.fromJson(model)).toList();
-        loading = false;
-      });
-    });
-  }
-
-  Future<List<Sorteio>> sorteioList() async {
-    API.getSorteios().then((response) {
-        Iterable lista = json.decode(response.body); // Usamos um iterator
-        players = lista.map((model) => Sorteio.fromJson(model)).toList();
-        loading = false;
-    });
-    return players;
-  }
 
 
   @override
