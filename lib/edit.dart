@@ -64,9 +64,9 @@ class _EditState extends State<Edit> {
           child: ElevatedButton(
             child: Text('SALVAR'),
             onPressed: () {
-              _onConfirm(context);
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+              editStudent().then((_) =>
+                  Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false));
             },
           ),
         ),

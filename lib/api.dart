@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
 // A URL da API
-const baseUrl = "https://mirudus.000webhostapp.com/";
+const baseUrl = "http://localhost/mirudus/";
 
 // Criamos a classe da nossa API. O nome você que escolhe. Fazemos aqui
 // uma requisição get (como fizemos no react) e passamos a URL, mas usamos

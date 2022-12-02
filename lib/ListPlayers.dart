@@ -98,17 +98,33 @@ class _PlayersListViewState extends State<PlayersListView> {
         appBar: AppBar(
           title: Text("MIRUDUS"),
           actions: <Widget>[
-            IconButton(
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Insert()),
-                );
-              },
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.change_circle_outlined,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Insert()),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Insert()),
+                    ).then((_) => setState(() {}));
+                  },
+                ),
+              ],
             )
           ],
         ),
@@ -191,7 +207,7 @@ class _PlayersListViewState extends State<PlayersListView> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         Edit(player: players[index])),
-                                              );
+                                              ).then((_) => setState(() {}));
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: EdgeInsets.all(5),

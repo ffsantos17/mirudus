@@ -29,11 +29,8 @@ class _InsertState extends State<Insert> {
   }
 
   void _onConfirm(context) async {
-    await _createStudent();
-
-    // Remove all existing routes until the Home.dart, then rebuild Home.
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    await _createStudent().then((_) => Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false));
   }
 
   var sequenceNumbers = new List<int>.generate(21, (k) => k + 1);
