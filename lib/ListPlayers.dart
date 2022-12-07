@@ -58,6 +58,7 @@ class _PlayersListViewState extends State<PlayersListView> {
     score2 = 0;
     media1 = 0;
     media2 = 0;
+
     itensMarcados.shuffle();
     itensMarcados.sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
 
@@ -106,10 +107,32 @@ class _PlayersListViewState extends State<PlayersListView> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Insert()),
-                    );
+                    List<Player> itensMarcados =
+                    List.from(players.where((player) => player.checked));
+                    final playersSelecionados = [];
+                    itensMarcados.forEach((player) {
+                      playersSelecionados.add(player.id);
+                    });
+                    setState(() {
+                      loading = true;
+                    });
+                    API.atualizaPlayers(playersSelecionados).then((response) {
+                      API.getPlayers().then((response) {
+                        setState(() {
+                          Iterable lista = json.decode(response.body); // Usamos um iterator
+                          players = lista.map((model) => Player.fromJson(model)).toList();
+                          loading = false;
+                          time1 = [];
+                          time2 = [];
+                          score1 = 0;
+                          score2 = 0;
+                          _counter = 0;
+                          media1 = 0;
+                          media2 = 0;
+                        });
+                      });
+                    });
+                    print(playersSelecionados);
                   },
                 ),
                 IconButton(

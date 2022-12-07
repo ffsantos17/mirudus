@@ -20,7 +20,7 @@ class _EditState extends State<Edit> {
 
   // This is for text onChange
   late TextEditingController nameController;
-  late TextEditingController levelController;
+  late TextEditingController linkController;
   late int level;
 
   // Http post request
@@ -32,6 +32,7 @@ class _EditState extends State<Edit> {
       body: {
         "id": widget.player.id.toString(),
         "player_nome": nameController.text,
+        "player_link": linkController.text,
         "player_level": level.toString()
       },
     );
@@ -45,8 +46,8 @@ class _EditState extends State<Edit> {
   @override
   void initState() {
     nameController = TextEditingController(text: widget.player.name);
-    levelController =
-        TextEditingController(text: widget.player.level.toString());
+    linkController = TextEditingController(text: widget.player.link);
+    //levelController =TextEditingController(text: widget.player.level.toString());
     super.initState();
     level = int.parse(widget.player.level);
   }
@@ -86,11 +87,11 @@ class _EditState extends State<Edit> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: 'Player'),
                   ),
-                  /*TextFormField(
-            controller: widget.levelController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: 'Level'),
-          ),*/
+                  TextFormField(
+                    controller: linkController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: 'Link'),
+                  ),
                   SizedBox(height: 20),
                   Text("Level"),
                   DropdownButton<int>(

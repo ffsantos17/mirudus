@@ -16,24 +16,38 @@ class API {
     var url = baseUrl + "list_sorteios.php";
     return await http.get(Uri.parse(url));
   }
+
+  static Future atualizaPlayers(players) async {
+
+    var url = baseUrl + "atualiza_players.php";
+    return await http.post(Uri.parse(url),
+      body: {
+        "players" : players.toString()
+      },
+    );
+  }
+
 }
 
 class Player{
   String id;
   String name;
   String level;
+  String link;
   bool checked;
 
   Player({required this.id,
     required this.name,
     required this.level,
+    required this.link,
     required this.checked
   });
 
   Player.fromJson(Map json)
-      : id = json['id'],
-        name = json['player_nome'],
-        level = json['player_level'],
+      : id = json['id'].toString(),
+        name = json['player_nome'].toString(),
+        level = json['player_level'].toString(),
+        link = json['player_link'].toString(),
         checked = false;
 }
 
