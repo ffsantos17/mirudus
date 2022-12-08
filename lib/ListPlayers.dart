@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mirudus/Insert.dart';
 import 'dart:convert';
 import 'api.dart';
@@ -88,6 +89,7 @@ class _PlayersListViewState extends State<PlayersListView> {
     media1 = score1/time1.length;
     media2 = score2/time2.length;
     _insertSorteio(media1, media2);
+    Clipboard.setData(ClipboardData(text: "Times\n${time1.toString()} - ${media1}\n${time2.toString()} - ${media2}"));
   }
 
 

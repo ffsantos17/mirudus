@@ -1,11 +1,11 @@
 import 'package:http/http.dart' as http;
 
 // A URL da API
-const baseUrl = "http://localhost/mirudus/";
+const baseUrl = "http://localhost/conn/";
 
 // Criamos a classe da nossa API. O nome você que escolhe. Fazemos aqui
 // uma requisição get (como fizemos no react) e passamos a URL, mas usamos
-// um Uri.parse pra transformar a string em uma URI.
+// um Uri.parse pra transformar a string em uma URI.-
 class API {
   static Future getPlayers() async {
     var url = baseUrl + "players.php";

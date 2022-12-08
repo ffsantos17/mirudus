@@ -14,7 +14,7 @@ class _InsertState extends State<Insert> {
 
   // Handles text onchange
   TextEditingController nameController = new TextEditingController();
-  TextEditingController levelController = new TextEditingController();
+  TextEditingController linkController = new TextEditingController();
   int level = 1;
 
   // Http post request to create new data
@@ -23,6 +23,7 @@ class _InsertState extends State<Insert> {
       Uri.parse("${baseUrl}create.php"),
       body: {
         "player_nome": nameController.text,
+        "player_link": linkController.text,
         "player_level": level.toString()
       },
     );
@@ -69,11 +70,11 @@ class _InsertState extends State<Insert> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: 'Player'),
                   ),
-                  /*TextFormField(
-            controller: widget.levelController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: 'Level'),
-          ),*/
+                  TextFormField(
+                    controller: linkController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(labelText: 'Link'),
+                  ),
                   SizedBox(height: 20),
                   Text("Level"),
                   DropdownButton<int>(
