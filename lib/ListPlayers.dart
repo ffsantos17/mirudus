@@ -6,7 +6,6 @@ import 'api.dart';
 import 'edit.dart';
 import 'package:http/http.dart' as http;
 
-// Vamos precisar de uma aplicação com estado
 class PlayersListView extends StatefulWidget {
   @override
   _PlayersListViewState createState() => _PlayersListViewState();
@@ -21,13 +20,12 @@ class _PlayersListViewState extends State<PlayersListView> {
   int _counter = 0;
   double media1 = 0;
   double media2 = 0;
-  List<Player> players = List<Player>.empty(); // Lista dos players
+  List<Player> players = List<Player>.empty();
 
-  // Construtor, atualiza com setState a lista de filmes.
   _PlayersListViewState() {
     API.getPlayers().then((response) {
       setState(() {
-        Iterable lista = json.decode(response.body); // Usamos um iterator
+        Iterable lista = json.decode(response.body);
         players = lista.map((model) => Player.fromJson(model)).toList();
         loading = false;
       });
@@ -48,7 +46,6 @@ class _PlayersListViewState extends State<PlayersListView> {
 
 
 
-  /* Aqui é como separamos apenas os registros marcados */
   void listarApenasMarcados() {
     List<Player> itensMarcados =
     List.from(players.where((player) => player.checked));
@@ -63,6 +60,7 @@ class _PlayersListViewState extends State<PlayersListView> {
     itensMarcados.sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
 
     setState(() {
+      //Realiza sorteio do time
       var pos = 0;
       itensMarcados.forEach((player) {
         if(pos == 8){
@@ -72,7 +70,7 @@ class _PlayersListViewState extends State<PlayersListView> {
           time1.add(player.name);
           score1 = int.parse(player.level) + score1;
         }else {
-          if (score1 > score2 && time2.length < time1.length) {
+          if (score1 > score2 && time2.length <= time1.length) {
             int level = int.parse(player.level);
             time2.add(player.name);
             score2 = level + score2;
@@ -93,7 +91,6 @@ class _PlayersListViewState extends State<PlayersListView> {
 
 
 
-  // Método build sobrecarregado que vai construir nossa página
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +149,6 @@ class _PlayersListViewState extends State<PlayersListView> {
           )
         ],
       ),
-      // Aqui vem nossa lista
       body: Center(
         child: Container(
             child: Padding(
@@ -183,20 +179,8 @@ class _PlayersListViewState extends State<PlayersListView> {
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, height: 2)),
                           ],
                         ),
-                      ), //Container
-                      /*const SizedBox(
-                          width: 20,
-                        ), //SizedBox
-                        Container(
-                            width: 175,
-                            height: 250,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.black12,
-                            ) //BoxDecoration
-                        ) */
-                    ], //<Widget>[]
+                      ),
+                    ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ), //Row
                   Container(
@@ -206,10 +190,8 @@ class _PlayersListViewState extends State<PlayersListView> {
                           child:Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0,0,20),
                             child:ListView.builder(
-                              itemCount: players.length, // quantidade de elementos
-                              // Os elementos da lista
+                              itemCount: players.length,
                               itemBuilder: (context, index) {
-                                // Vai ser um item de lista tipo ListTile
                                 return CheckboxListTile(
                                   title: Container(
                                     child: Column(
@@ -239,35 +221,11 @@ class _PlayersListViewState extends State<PlayersListView> {
                                                 elevation: 0,
                                               ),
                                             ),
-                                            /*Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: ElevatedButton(
-                                              child: const Icon(
-                                                Icons.delete,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Edit(player: players[index])),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                padding: EdgeInsets.all(5),
-                                                minimumSize: Size(0, 0),
-                                                elevation: 0,
-                                              ),
-                                            ),
-                                          ),*/
                                           ],
                                         ),
                                       ],
                                     ),
                                   ),
-                                  //subtitle: Text("Level - " +players[index].level),
-                                  //Text(players[index].name + " | Level - " +players[index].level),
                                   value: players[index].checked,
                                   secondary: Container(
                                     height: 35,
@@ -298,19 +256,15 @@ class _PlayersListViewState extends State<PlayersListView> {
                   ),
                   ElevatedButton(
                       onPressed: listarApenasMarcados,
-                      child: Text("Sortear"))//Container
-                ], //<widget>[]
+                      child: Text("Sortear"))
+                ],
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
               ), //Column
             ) //Padding
         ), //Container
-      )
-      ,
-      /*floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.change_circle_outlined),
-          onPressed: listarApenasMarcados,
-        )*/
+      ),
+
     );
   }
 
