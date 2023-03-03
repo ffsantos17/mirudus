@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mirudus/Insert.dart';
 import 'dart:convert';
 import 'api.dart';
@@ -32,7 +33,6 @@ class _PlayersListViewState extends State<PlayersListView> {
       });
     });
   }
-
   Future _insertSorteio(media1, media2) async {
     return await http.post(Uri.parse(
         "${baseUrl}insert_sorteio.php"),
@@ -58,6 +58,7 @@ class _PlayersListViewState extends State<PlayersListView> {
     score2 = 0;
     media1 = 0;
     media2 = 0;
+
     itensMarcados.shuffle();
     itensMarcados.sort((a, b) => int.parse(b.level).compareTo(int.parse(a.level)));
 
@@ -87,6 +88,7 @@ class _PlayersListViewState extends State<PlayersListView> {
     media1 = score1/time1.length;
     media2 = score2/time2.length;
     _insertSorteio(media1, media2);
+    Clipboard.setData(ClipboardData(text: "Times\n${time1.toString()} - ${media1}\n${time2.toString()} - ${media2}"));
   }
 
 
@@ -95,56 +97,94 @@ class _PlayersListViewState extends State<PlayersListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("MIRUDUS"),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
+      appBar: AppBar(
+        title: Text("MIRUDUS"),
+        actions: <Widget>[
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.change_circle_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  List<Player> itensMarcados =
+                  List.from(players.where((player) => player.checked));
+                  final playersSelecionados = [];
+                  itensMarcados.forEach((player) {
+                    playersSelecionados.add(player.id);
+                  });
+                  setState(() {
+                    loading = true;
+                  });
+                  API.atualizaPlayers(playersSelecionados).then((response) {
+                    API.getPlayers().then((response) {
+                      setState(() {
+                        Iterable lista = json.decode(response.body); // Usamos um iterator
+                        players = lista.map((model) => Player.fromJson(model)).toList();
+                        loading = false;
+                        time1 = [];
+                        time2 = [];
+                        score1 = 0;
+                        score2 = 0;
+                        _counter = 0;
+                        media1 = 0;
+                        media2 = 0;
+                      });
+                    });
+                  });
+                  print(playersSelecionados);
+                },
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Insert()),
-                );
-              },
-            )
-          ],
-        ),
-        // Aqui vem nossa lista
-        body: Center(
-          child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          width: MediaQuery.of(context).size.width * .85,
-                          height: 170,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text('Quantidade Marcados: $_counter',
+              IconButton(
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Insert()),
+                  ).then((_) => setState(() {}));
+                },
+              ),
+            ],
+          )
+        ],
+      ),
+      // Aqui vem nossa lista
+      body: Center(
+        child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width * .85,
+                        height: 170,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text('Quantidade Marcados: $_counter',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, height: 2)),
-                              SelectableText('Time 1 | Média Time: ${media1}\n'
-                                  '$time1\n'
-                                  'Time 2 | Média Time: ${media2}\n'
-                                  '$time2',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, height: 2)),
-                            ],
-                          ),
-                        ), //Container
-                        /*const SizedBox(
+                            SelectableText('Time 1 | Média Time: ${media1}\n'
+                                '$time1\n'
+                                'Time 2 | Média Time: ${media2}\n'
+                                '$time2',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, height: 2)),
+                          ],
+                        ),
+                      ), //Container
+                      /*const SizedBox(
                           width: 20,
                         ), //SizedBox
                         Container(
@@ -156,50 +196,50 @@ class _PlayersListViewState extends State<PlayersListView> {
                               color: Colors.black12,
                             ) //BoxDecoration
                         ) */
-                      ], //<Widget>[]
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    ), //Row
-                    Container(
+                    ], //<Widget>[]
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ), //Row
+                  Container(
                       child: loading? const Center(
                         child: CircularProgressIndicator(),
                       ) : Expanded(
-                        child:Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0,0,20),
-                          child:ListView.builder(
-                            itemCount: players.length, // quantidade de elementos
-                            // Os elementos da lista
-                            itemBuilder: (context, index) {
-                              // Vai ser um item de lista tipo ListTile
-                              return CheckboxListTile(
-                                title: Container(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Expanded(
-                                            child: Text(players[index].name),
-                                          ),
-                                          ElevatedButton(
-                                            child: const Icon(
-                                              Icons.edit,
-                                              color: Colors.white,
+                          child:Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0,0,20),
+                            child:ListView.builder(
+                              itemCount: players.length, // quantidade de elementos
+                              // Os elementos da lista
+                              itemBuilder: (context, index) {
+                                // Vai ser um item de lista tipo ListTile
+                                return CheckboxListTile(
+                                  title: Container(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Expanded(
+                                              child: Text(players[index].name),
                                             ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Edit(player: players[index])),
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              padding: EdgeInsets.all(5),
-                                              minimumSize: Size(0, 0),
-                                              elevation: 0,
+                                            ElevatedButton(
+                                              child: const Icon(
+                                                Icons.edit,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Edit(player: players[index])),
+                                                ).then((_) => setState(() {}));
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                padding: EdgeInsets.all(5),
+                                                minimumSize: Size(0, 0),
+                                                elevation: 0,
+                                              ),
                                             ),
-                                          ),
-                                         /*Padding(
+                                            /*Padding(
                                             padding: const EdgeInsets.all(5),
                                             child: ElevatedButton(
                                               child: const Icon(
@@ -221,53 +261,53 @@ class _PlayersListViewState extends State<PlayersListView> {
                                               ),
                                             ),
                                           ),*/
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                //subtitle: Text("Level - " +players[index].level),
-                                //Text(players[index].name + " | Level - " +players[index].level),
-                                value: players[index].checked,
-                                secondary: Container(
-                                  height: 35,
-                                  width: 35,
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    child: Image.asset(
-                                      'imagens/level_${players[index].level}.PNG',
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    if(value == true){
-                                      _counter++;
-                                    }else{
-                                      _counter--;
-                                    }
-                                    players[index].checked = value!;
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        )
+                                  //subtitle: Text("Level - " +players[index].level),
+                                  //Text(players[index].name + " | Level - " +players[index].level),
+                                  value: players[index].checked,
+                                  secondary: Container(
+                                    height: 35,
+                                    width: 35,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: Image.asset(
+                                        'imagens/level_${players[index].level}.PNG',
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if(value == true){
+                                        _counter++;
+                                      }else{
+                                        _counter--;
+                                      }
+                                      players[index].checked = value!;
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          )
 
                       )
-                    ),
-                    ElevatedButton(
+                  ),
+                  ElevatedButton(
                       onPressed: listarApenasMarcados,
                       child: Text("Sortear"))//Container
-                  ], //<widget>[]
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                ), //Column
-              ) //Padding
-          ), //Container
-        )
-        ,
-        /*floatingActionButton: FloatingActionButton(
+                ], //<widget>[]
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+              ), //Column
+            ) //Padding
+        ), //Container
+      )
+      ,
+      /*floatingActionButton: FloatingActionButton(
           child: Icon(Icons.change_circle_outlined),
           onPressed: listarApenasMarcados,
         )*/

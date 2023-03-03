@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'ListPlayers.dart';
 import 'api.dart';
-import 'form.dart';
 
 class Edit extends StatefulWidget {
   final Player player;
@@ -20,7 +18,7 @@ class _EditState extends State<Edit> {
 
   // This is for text onChange
   late TextEditingController nameController;
-  late TextEditingController levelController;
+  late TextEditingController linkController;
   late int level;
 
   // Http post request
@@ -32,25 +30,23 @@ class _EditState extends State<Edit> {
       body: {
         "id": widget.player.id.toString(),
         "player_nome": nameController.text,
+        "player_link": linkController.text,
         "player_level": level.toString()
       },
     );
 
   }
 
-  void _onConfirm(context) async {
-    await editStudent();
-  }
 
   @override
   void initState() {
     nameController = TextEditingController(text: widget.player.name);
-    levelController =
-        TextEditingController(text: widget.player.level.toString());
+    linkController = TextEditingController(text: widget.player.link);
+    //levelController =TextEditingController(text: widget.player.level.toString());
     super.initState();
     level = int.parse(widget.player.level);
   }
-
+  var sequenceNumbers = new List<int>.generate(21, (k) => k + 1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,13 +56,13 @@ class _EditState extends State<Edit> {
       bottomNavigationBar: SizedBox(
         height: 58,
         child: //some
-            BottomAppBar(
+        BottomAppBar(
           child: ElevatedButton(
             child: Text('SALVAR'),
             onPressed: () {
-              _onConfirm(context);
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+              editStudent().then((_) =>
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false));
             },
           ),
         ),
@@ -77,11 +73,39 @@ class _EditState extends State<Edit> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(12),
-            child: AppForm(
-              formKey: formKey,
-              nameController: nameController,
-              levelController: levelController,
-              level: level,
+            child: Form(
+              autovalidateMode: AutovalidateMode.always, key: formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: nameController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: 'Player'),
+                  ),
+                  TextFormField(
+                    controller: linkController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: 'Link'),
+                  ),
+                  SizedBox(height: 20),
+                  Text("Level"),
+                  DropdownButton<int>(
+                      hint: Text("Level"),
+                      value: level,
+                      items: sequenceNumbers.map((int value) {
+                        return new DropdownMenuItem<int>(
+                          value: value,
+                          child: new Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          level = newVal!;
+                          print(level);
+                        });
+                      }),
+                ],
+              ),
             ),
           ),
         ),

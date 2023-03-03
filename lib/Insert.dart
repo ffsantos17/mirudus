@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'api.dart';
-import 'form.dart';
-
 
 class Insert extends StatefulWidget {
-
   @override
   _InsertState createState() => _InsertState();
 }
@@ -16,27 +13,27 @@ class _InsertState extends State<Insert> {
 
   // Handles text onchange
   TextEditingController nameController = new TextEditingController();
-  TextEditingController levelController = new TextEditingController();
+  TextEditingController linkController = new TextEditingController();
   int level = 1;
 
   // Http post request to create new data
   Future _createStudent() async {
-    return await http.post(Uri.parse(
-      "${baseUrl}create.php"),
+    return await http.post(
+      Uri.parse("${baseUrl}create.php"),
       body: {
         "player_nome": nameController.text,
+        "player_link": linkController.text,
         "player_level": level.toString()
       },
     );
   }
 
   void _onConfirm(context) async {
-    await _createStudent();
-
-    // Remove all existing routes until the Home.dart, then rebuild Home.
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    await _createStudent().then((_) => Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false));
   }
+
+  var sequenceNumbers = new List<int>.generate(21, (k) => k + 1);
 
   @override
   Widget build(BuildContext context) {
@@ -44,17 +41,17 @@ class _InsertState extends State<Insert> {
       appBar: AppBar(
         title: Text("inserir"),
       ),
-      bottomNavigationBar: SizedBox(height: 58, child: //some widget )
-      BottomAppBar(
-        child: ElevatedButton(
-          child: Text("SALVAR"),
-          onPressed: () {
-
+      bottomNavigationBar: SizedBox(
+        height: 58,
+        child: //some widget )
+        BottomAppBar(
+          child: ElevatedButton(
+            child: Text("SALVAR"),
+            onPressed: () {
               _onConfirm(context);
-
-          },
+            },
+          ),
         ),
-      ),
       ),
       body: Container(
         height: double.infinity,
@@ -62,11 +59,40 @@ class _InsertState extends State<Insert> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(12),
-            child: AppForm(
-              formKey: formKey,
-              nameController: nameController,
-              levelController: levelController,
-              level: level,
+            child: Form(
+              autovalidateMode: AutovalidateMode.always,
+              key: formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: nameController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: 'Player'),
+                  ),
+                  TextFormField(
+                    controller: linkController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(labelText: 'Link'),
+                  ),
+                  SizedBox(height: 20),
+                  Text("Level"),
+                  DropdownButton<int>(
+                      hint: Text("Level"),
+                      value: level,
+                      items: sequenceNumbers.map((int value) {
+                        return new DropdownMenuItem<int>(
+                          value: value,
+                          child: new Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          level = newVal!;
+                          print(level);
+                        });
+                      }),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mirudus/Insert.dart';
 import 'dart:convert';
 import 'api.dart';
-import 'edit.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -14,8 +12,30 @@ class SorteiosListView extends StatefulWidget {
 
 class _SorteiosListViewState extends State<SorteiosListView> {
   bool loading = true;
-  List<Sorteio> sorteios = List<Sorteio>.empty(); // Lista dos sorteios
+  List<Sorteio> players = List<Sorteio>.empty(); // Lista dos players
 
+
+
+
+  // Construtor, atualiza com setState a lista de filmes.
+  _SorteiosListViewState() {
+    API.getSorteios().then((response) {
+      setState(() {
+        Iterable lista = json.decode(response.body); // Usamos um iterator
+        players = lista.map((model) => Sorteio.fromJson(model)).toList();
+        loading = false;
+      });
+    });
+  }
+
+  Future<List<Sorteio>> sorteioList() async {
+    API.getSorteios().then((response) {
+      Iterable lista = json.decode(response.body); // Usamos um iterator
+      players = lista.map((model) => Sorteio.fromJson(model)).toList();
+      loading = false;
+    });
+    return players;
+  }
 
 
   @override
@@ -35,9 +55,9 @@ class _SorteiosListViewState extends State<SorteiosListView> {
                   columnWidthCalculationRange: ColumnWidthCalculationRange.allRows,
                   columns: getColumns())
                   : const Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                    ),
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                ),
               );
             },
           ),

@@ -1,11 +1,7 @@
 import 'package:http/http.dart' as http;
 
-// A URL da API
 const baseUrl = "https://mirudus.000webhostapp.com/";
 
-// Criamos a classe da nossa API. O nome você que escolhe. Fazemos aqui
-// uma requisição get (como fizemos no react) e passamos a URL, mas usamos
-// um Uri.parse pra transformar a string em uma URI.
 class API {
   static Future getPlayers() async {
     var url = baseUrl + "players.php";
@@ -16,25 +12,63 @@ class API {
     var url = baseUrl + "list_sorteios.php";
     return await http.get(Uri.parse(url));
   }
+
+  static Future atualizaPlayers(players) async {
+
+    var url = baseUrl + "atualiza_players.php";
+    return await http.post(Uri.parse(url),
+      body: {
+        "players" : players.toString()
+      },
+    );
+  }
+
+  static Future getPlayerGC(player_Id) async {
+    var url = 'https://gamersclub.com.br/api/box/init/' + player_Id;
+    return await http.get(Uri.parse(url));
+  }
+
 }
 
 class Player{
   String id;
   String name;
   String level;
+  String link;
   bool checked;
 
   Player({required this.id,
     required this.name,
     required this.level,
+    required this.link,
     required this.checked
   });
 
   Player.fromJson(Map json)
-      : id = json['id'],
-        name = json['player_nome'],
-        level = json['player_level'],
+      : id = json['id'].toString(),
+        name = json['player_nome'].toString(),
+        level = json['player_level'].toString(),
+        link = json['player_link'].toString(),
         checked = false;
+}
+
+class PlayerGC{
+  String id;
+  String name;
+  String level;
+  String rating;
+
+  PlayerGC({required this.id,
+    required this.name,
+    required this.level,
+    required this.rating
+  });
+
+  PlayerGC.fromJson(Map json)
+      : id = json['playerInfo']['id'],
+        name = json['playerInfo']['nick'],
+        level = json['playerInfo']['level'],
+        rating = json['playerInfo']['rating'];
 }
 
 class Sorteio{
@@ -62,32 +96,3 @@ class Sorteio{
         media2 = json['sorteio_mediaTime2'].toString(),
         date = json['sorteio_horario'].toString();
 }
-/*
-// A URL da API
-const baseUrl = "https://api.tvmaze.com/search/shows?q=";
-// Criamos a classe da nossa API. O nome você que escolhe. Fazemos aqui
-// uma requisição get (como fizemos no react) e passamos a URL, mas usamos
-// um Uri.parse pra transformar a string em uma URI.
-class API {
-  static Future getMovie(search) async {
-    var url = baseUrl + search;
-    return await http.get(Uri.parse(url));
-  }
-}
-// Criamos uma classe para representar os objetos que vão conter os filmes
-// e colocamos só os campos que vamos usar.
-class Movie {
-  int id;
-  String name;
-  String link;
-  String image;
-  bool checked;
-  Movie({required this.id, required this.name, required this.link, required this.image, required this.checked});
-  Movie.fromJson(Map json)
-      : id = json['show']['id'],
-        name = json['show']['name'],
-        link = json['show']['url'],
-        image = json['show']['image']['medium'],
-        checked = false;
-}
- */
